@@ -1,4 +1,9 @@
+import { useState } from "react";
+import Input from "./Input";
+
 export default function Signup() {
+    const [isMatchPassword, setIsMatchPassword] = useState(false)
+
     const handleSubmit = (e)=>{
         e.preventDefault()
         
@@ -6,8 +11,12 @@ export default function Signup() {
         const acquisitionChannel = fd.getAll("acquisition")
         const data = Object.fromEntries(fd.entries())  
         data.acquisition = acquisitionChannel;
-        console.log(data);
-        e.target.reset()
+        if(data.password !== data['comfirm-password']){
+          setIsMatchPassword(true)
+          return
+        }
+        e.target.reset();
+
     }
     
     return (
@@ -16,22 +25,25 @@ export default function Signup() {
         <p>We just need a little bit of data from you to get you started 🚀</p>
   
         <div className="control">
-          <label htmlFor="email">Email</label>
-          <input id="email" type="email" name="email" />
+          <Input label="email" id="email" type="email" name="email" required/>
         </div>
   
         <div className="control-row">
           <div className="control">
-            <label htmlFor="password">Password</label>
-            <input id="password" type="password" name="password" />
+          <Input label="password" id="password" type="password" name="password" required/>
           </div>
   
           <div className="control">
-            <label htmlFor="confirm-password">Confirm Password</label>
-            <input
-              id="confirm-password"
-              type="password"
-              name="confirm-password"
+            <Input label="confirm-password" 
+            id="confirm-password" 
+            type="password" 
+            name="confirm-password" 
+            required
+            onChange={()=>{
+              setIsMatchPassword(false)
+            }}
+            error={isMatchPassword}
+            errMess={"Password is not match"}
             />
           </div>
         </div>
